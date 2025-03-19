@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Review Generator - Demo</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --font-main: 'Roboto', 'Helvetica Neue', sans-serif;
+            --font-heading: 'Montserrat', 'Helvetica Neue', sans-serif;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: var(--font-main);
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .search-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .search-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .search-form label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            text-align: left;
+        }
+        
+        .search-form input {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .options-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .option-group {
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .option-group:last-child {
+            margin-right: 0;
+        }
+        
+        .option-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .option-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-accent {
+            background-color: var(--accent-color);
+        }
+        
+        .features {
+            padding: 4rem 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background-color: var(--light-color);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            font-family: var(--font-heading);
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .demo {
+            padding: 4rem 0;
+            background-color: #f8f9fa;
+        }
+        
+        .demo-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+        
+        .demo-content {
+            flex: 1;
+        }
+        
+        .demo-image {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .demo-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .progress-container {
+            display: none;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--secondary-color);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .status-message {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        
+        .result-container {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .result-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .result-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .result-preview {
+            margin-bottom: 1.5rem;
+        }
+        
+        .result-preview img {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .result-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .footer-logo {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-logo img {
+            height: 40px;
+        }
+        
+        .footer-links {
+            display: flex;
+            list-style: none;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links li {
+            margin: 0 15px;
+        }
+        
+        .footer-links li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links li a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .footer-text {
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+            }
+            
+            nav ul {
+                justify-content: center;
+            }
+            
+            .options-container {
+                flex-direction: column;
+            }
+            
+            .option-group {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .demo-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <img src="logo.svg" alt="Clinical Review Generator Logo">
+                <h1>Clinical Review Generator</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h2>Generate Comprehensive Clinical Reviews</h2>
+            <p>Enter any clinical topic to create evidence-based narrative reviews with proper structure, formatting, and citations. Perfect for medical professionals, researchers, and educators.</p>
+            
+            <div class="search-container">
+                <form class="search-form" id="review-form">
+                    <label for="topic">Enter Clinical Topic</label>
+                    <input type="text" id="topic" name="topic" placeholder="e.g., Type 2 Diabetes Mellitus, Hypertension, Asthma" required>
+                    
+                    <div class="options-container">
+                        <div class="option-group">
+                            <label for="evidence-recency">Evidence Recency</label>
+                            <select id="evidence-recency" name="evidence-recency">
+                                <option value="recent">Prioritize Recent (3-5 years)</option>
+                                <option value="balanced" selected>Balanced (Recent + Seminal)</option>
+                                <option value="comprehensive">Comprehensive (All Periods)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label for="word-count">Word Count</label>
+                            <select id="word-count" name="word-count">
+                                <option value="10000">~10,000 words</option>
+                                <option value="12500" selected>~12,500 words</option>
+                                <option value="15000">~15,000 words</option>
+                            </select>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label for="citation-style">Citation Style</label>
+                            <select id="citation-style" name="citation-style">
+                                <option value="vancouver" selected>Vancouver</option>
+                                <option value="apa">APA</option>
+                                <option value="mla">MLA</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="generate-btn">Generate Review</button>
+                </form>
+                
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress" id="progress-bar"></div>
+                    </div>
+                    <p class="status-message" id="status-message">Retrieving medical data...</p>
+                </div>
+                
+                <div class="result-container" id="result-container">
+                    <div class="result-header">
+                        <h3 class="result-title" id="result-title">Clinical Review: Type 2 Diabetes Mellitus</h3>
+                        <div class="result-actions">
+                            <button class="btn btn-primary" id="download-btn">Download PDF</button>
+                            <button class="btn btn-accent" id="new-search-btn">New Search</button>
+                        </div>
+                    </div>
+                    
+                    <div class="result-preview">
+                        <img src="diabetes-preview.png" alt="PDF Preview" id="pdf-preview">
+                    </div>
+                    
+                    <div class="result-meta">
+                        <span id="word-count-result">12,487 words</span>
+                        <span id="generation-date">Generated on March 19, 2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Comprehensive Clinical Reviews</h2>
+                <p>Our system generates detailed, evidence-based clinical narrative reviews with all the essential components required for medical literature.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Complete Structure</h3>
+                    <p>Includes abstract, introduction, epidemiology, pathophysiology, risk factors, classification, clinical presentation, diagnosis, management, prevention, prognosis, and future directions.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Evidence-Based Content</h3>
+                    <p>Balanced citation of seminal studies, recent systematic reviews, clinical guidelines, and significant research developments from the past 3-5 years.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔬</div>
+                    <h3>Technical Quality</h3>
+                    <p>Professional medical terminology, statistical data on prevalence and outcomes, identification of scientific consensus versus controversy, and acknowledgment of evidence limitations.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Comprehensive Coverage</h3>
+                    <p>Covers the full spectrum from basic science to clinical practice to public health implications for a complete understanding of the topic.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h3>Current Information</h3>
+                    <p>Emphasizes contemporary understanding, current best practices, and emerging research directions with appropriate citation of recent literature.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <h3>Professional Formatting</h3>
+                    <p>Properly formatted PDF with consistent styling, clear section headings, readable typography, and professional citation formatting.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="demo" id="demo">
+        <div class="container">
+            <div class="section-title">
+                <h2>See It In Action</h2>
+                <p>Our clinical review generator creates comprehensive, evidence-based documents that follow professional medical literature standards.</p>
+            </div>
+            
+            <div class="demo-container">
+                <div class="demo-content">
+                    <h3>How It Works</h3>
+                    <p>Simply enter any clinical topic, adjust your preferences for evidence recency and word count, and click "Generate Review." The system will:</p>
+                    <ul>
+                        <li>Retrieve the latest medical research from PubMed and other databases</li>
+                        <li>Analyze and synthesize content from multiple sources</li>
+                        <li>Structure the information according to medical literature standards</li>
+                        <li>Generate a comprehensive PDF document with proper formatting and citations</li>
+                    </ul>
+                    <p>The entire process takes just a few minutes, and you'll receive a professionally formatted clinical review ready for use.</p>
+                </div>
+                
+                <div class="demo-image">
+                    <img src="sample-review.png" alt="Sample Clinical Review">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>About This Project</h2>
+                <p>The Clinical Review Generator was created to help medical professionals save time and access comprehensive, evidence-based information.</p>
+            </div>
+            
+            <div class="demo-container">
+                <div class="demo-content">
+                    <h3>For Medical Professionals Worldwide</h3>
+                    <p>This tool is designed to assist doctors, researchers, educators, and students in the medical field who need to:</p>
+                    <ul>
+                        <li>Quickly access comprehensive information on clinical topics</li>
+                        <li>Prepare educational materials with proper citations and structure</li>
+                        <li>Stay updated on the latest evidence and guidelines</li>
+                        <li>Create reference documents for clinical practice</li>
+                    </ul>
+                    <p>By automating the process of gathering and organizing medical information, the Clinical Review Generator helps healthcare professionals focus more on patient care and research.</p>
+                    <p>This demonstration version showcases the user interface and functionality. The full version includes real-time access to medical databases and complete PDF generation capabilities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <img src="logo.svg" alt="Clinical Review Generator Logo">
+            </div>
+            
+            <ul class="footer-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            
+            <p class="footer-text">© 2025 Clinical Review Generator. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reviewForm = document.getElementById('review-form');
+            const progressContainer = document.getElementById('progress-container');
+            const resultContainer = document.getElementById('result-container');
+            const progressBar = document.getElementById('progress-bar');
+            const statusMessage = document.getElementById('status-message');
+            const resultTitle = document.getElementById('result-title');
+            const wordCountResult = document.getElementById('word-count-result');
+            const generationDate = document.getElementById('generation-date');
+            const downloadBtn = document.getElementById('download-btn');
+            const newSearchBtn = document.getElementById('new-search-btn');
+            const pdfPreview = document.getElementById('pdf-preview');
+            
+            // Sample topics for demonstration
+            const sampleTopics = [
+                'Type 2 Diabetes Mellitus',
+                'Hypertension',
+                'Asthma',
+                'Rheumatoid Arthritis',
+                'Major Depressive Disorder',
+                'Chronic Obstructive Pulmonary Disease',
+                'Alzheimer\'s Disease',
+                'Breast Cancer',
+                'Multiple Sclerosis',
+                'Parkinson\'s Disease'
+            ];
+            
+            // Sample PDF previews
+            const samplePreviews = [
+                'diabetes-preview.png',
+                'hypertension-preview.png',
+                'asthma-preview.png',
+                'arthritis-preview.png',
+                'depression-preview.png'
+            ];
+            
+            reviewForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const topic = document.getElementById('topic').value;
+                const evidenceRecency = document.getElementById('evidence-recency').value;
+                const wordCount = document.getElementById('word-count').value;
+                const citationStyle = document.getElementById('citation-style').value;
+                
+                if (!topic) {
+                    alert('Please enter a clinical topic');
+                    return;
+                }
+                
+                // Show progress container
+                reviewForm.style.display = 'none';
+                progressContainer.style.display = 'block';
+                
+                // Simulate progress
+                let progress = 0;
+                const interval = setInterval(function() {
+                    progress += 5;
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress === 20) {
+                        statusMessage.textContent = 'Retrieving medical data...';
+                    } else if (progress === 40) {
+                        statusMessage.textContent = 'Analyzing content...';
+                    } else if (progress === 60) {
+                        statusMessage.textContent = 'Generating review structure...';
+                    } else if (progress === 80) {
+                        statusMessage.textContent = 'Creating PDF document...';
+                    } else if (progress >= 100) {
+                        clearInterval(interval);
+                        statusMessage.textContent = 'Review complete!';
+                        
+                        // Show result after a short delay
+                        setTimeout(function() {
+                            progressContainer.style.display = 'none';
+                            resultContainer.style.display = 'block';
+                            
+                            // Set result details
+                            resultTitle.textContent = 'Clinical Review: ' + topic;
+                            
+                            // Set random word count around the selected value
+                            const actualWordCount = parseInt(wordCount) + Math.floor(Math.random() * 1000 - 500);
+                            wordCountResult.textContent = actualWordCount.toLocaleString() + ' words';
+                            
+                            // Set current date
+                            const today = new Date();
+                            generationDate.textContent = 'Generated on ' + today.toLocaleDateString('en-US', { 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric' 
+                            });
+                            
+                            // Set preview image based on topic or use random if no match
+                            let previewImage = 'diabetes-preview.png'; // default
+                            
+                            if (topic.toLowerCase().includes('diabetes')) {
+                                previewImage = 'diabetes-preview.png';
+                            } else if (topic.toLowerCase().includes('hypertension')) {
+                                previewImage = 'hypertension-preview.png';
+                            } else if (topic.toLowerCase().includes('asthma')) {
+                                previewImage = 'asthma-preview.png';
+                            } else if (topic.toLowerCase().includes('arthritis')) {
+                                previewImage = 'arthritis-preview.png';
+                            } else if (topic.toLowerCase().includes('depression') || topic.toLowerCase().includes('depressive')) {
+                                previewImage = 'depression-preview.png';
+                            } else {
+                                // Random preview for other topics
+                                previewImage = samplePreviews[Math.floor(Math.random() * samplePreviews.length)];
+                            }
+                            
+                            pdfPreview.src = previewImage;
+                        }, 1000);
+                    }
+                }, 100);
+            });
+            
+            // New search button
+            newSearchBtn.addEventListener('click', function() {
+                resultContainer.style.display = 'none';
+                reviewForm.style.display = 'flex';
+                document.getElementById('topic').value = '';
+            });
+            
+            // Download button - simulate download
+            downloadBtn.addEventListener('click', function() {
+                alert('This is a demonstration of the user interface. In the full version, this would download your generated PDF.');
+            });
+            
+            // Populate topic field with random sample on click if empty
+            document.getElementById('topic').addEventListener('click', function() {
+                if (!this.value) {
+                    const randomTopic = sampleTopics[Math.floor(Math.random() * sampleTopics.length)];
+                    this.value = randomTopic;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
